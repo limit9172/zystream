@@ -1,37 +1,370 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔧 Maintenance - Zystream</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #0f0f0f;
-            color: #e0e0e0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            text-align: center;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-        }
-        .icon { font-size: 5em; margin-bottom: 20px; }
-        h1 { color: #f5c518; font-size: 2.5em; margin-bottom: 10px; }
-        p { color: #aaa; font-size: 1.1em; line-height: 1.6; }
-        .status { color: #888; font-size: 0.9em; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="icon">🔧</div>
-        <h1>Sedang Maintenance</h1>
-        <p>Kami sedang melakukan pemeliharaan untuk meningkatkan pengalaman Anda.<br>Kembali dalam beberapa menit.</p>
-        <p class="status">⏱️ Estimasi selesai: 2 menit</p>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  .maint-wrap {
+    min-height: 520px;
+    background: #0a0a0f;
+    border-radius: var(--border-radius-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(245,197,24,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,197,24,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .bg-glow {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,197,24,0.08) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+    pointer-events: none;
+  }
+
+  .icon-ring {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 2rem;
+    z-index: 1;
+  }
+
+  .icon-ring-border {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1.5px solid rgba(245,197,24,0.3);
+    animation: spin 8s linear infinite;
+  }
+
+  .icon-ring-border::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    background: #f5c518;
+    border-radius: 50%;
+    transform: translateX(-50%);
+  }
+
+  .icon-core {
+    position: absolute;
+    inset: 12px;
+    background: rgba(245,197,24,0.1);
+    border-radius: 50%;
+    border: 1px solid rgba(245,197,24,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon-core i {
+    font-size: 32px;
+    color: #f5c518;
+    animation: gear-spin 4s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes gear-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .maint-badge {
+    background: rgba(245,197,24,0.12);
+    border: 1px solid rgba(245,197,24,0.25);
+    color: #f5c518;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 1.25rem;
+    z-index: 1;
+  }
+
+  .maint-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 0.75rem;
+    z-index: 1;
+    letter-spacing: -0.5px;
+  }
+
+  .maint-title span {
+    color: #f5c518;
+  }
+
+  .maint-desc {
+    font-size: 14px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.7;
+    max-width: 380px;
+    text-align: center;
+    margin: 0 0 2rem;
+    z-index: 1;
+  }
+
+  .progress-wrap {
+    width: 320px;
+    z-index: 1;
+    margin-bottom: 1.75rem;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .progress-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 500;
+  }
+
+  .progress-pct {
+    font-size: 12px;
+    color: #f5c518;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: #f5c518;
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  .steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 320px;
+    z-index: 1;
+    margin-bottom: 2rem;
+  }
+
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .step-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 11px;
+  }
+
+  .step-icon.done {
+    background: rgba(29,158,117,0.2);
+    border: 1px solid rgba(29,158,117,0.4);
+    color: #1D9E75;
+  }
+
+  .step-icon.active {
+    background: rgba(245,197,24,0.15);
+    border: 1px solid rgba(245,197,24,0.4);
+    color: #f5c518;
+    animation: pulse-border 1.5s ease infinite;
+  }
+
+  .step-icon.pending {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.2);
+  }
+
+  @keyframes pulse-border {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(245,197,24,0.3); }
+    50% { box-shadow: 0 0 0 4px rgba(245,197,24,0); }
+  }
+
+  .step-text {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 400;
+  }
+
+  .step-text.active-txt { color: rgba(255,255,255,0.85); font-weight: 500; }
+  .step-text.done-txt { color: rgba(255,255,255,0.35); }
+
+  .eta-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.04);
+    border: 0.5px solid rgba(255,255,255,0.1);
+    padding: 8px 16px;
+    border-radius: 20px;
+    z-index: 1;
+  }
+
+  .eta-chip i {
+    font-size: 14px;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .eta-chip span {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .eta-chip strong {
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .divider {
+    width: 320px;
+    height: 0.5px;
+    background: rgba(255,255,255,0.07);
+    margin: 1.5rem 0;
+    z-index: 1;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 1;
+  }
+
+  .brand-dot {
+    width: 8px;
+    height: 8px;
+    background: #f5c518;
+    border-radius: 50%;
+  }
+
+  .brand-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: -0.3px;
+  }
+
+  .brand-name span { color: #f5c518; }
+</style>
+
+<div class="maint-wrap">
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <div class="icon-ring">
+    <div class="icon-ring-border"></div>
+    <div class="icon-core">
+      <i class="ti ti-settings" aria-hidden="true"></i>
     </div>
-</body>
-</html>
+  </div>
+
+  <div class="maint-badge">Maintenance Mode</div>
+
+  <h1 class="maint-title">Sedang dalam <span>pemeliharaan</span></h1>
+  <p class="maint-desc">Kami sedang melakukan pembaruan sistem untuk meningkatkan performa dan pengalaman streaming kamu. Mohon tunggu sebentar.</p>
+
+  <div class="progress-wrap">
+    <div class="progress-header">
+      <span class="progress-label">Progres pembaruan</span>
+      <span class="progress-pct" id="pct">0%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="pbar"></div>
+    </div>
+  </div>
+
+  <div class="steps-list">
+    <div class="step-item" id="s1">
+      <div class="step-icon done"><i class="ti ti-check" aria-hidden="true"></i></div>
+      <span class="step-text done-txt">Backup database selesai</span>
+    </div>
+    <div class="step-item" id="s2">
+      <div class="step-icon active"><i class="ti ti-refresh" aria-hidden="true"></i></div>
+      <span class="step-text active-txt">Memperbarui konten & API</span>
+    </div>
+    <div class="step-item" id="s3">
+      <div class="step-icon pending"><i class="ti ti-circle" aria-hidden="true"></i></div>
+      <span class="step-text">Verifikasi & pengujian akhir</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="eta-chip">
+    <i class="ti ti-clock" aria-hidden="true"></i>
+    <span>Estimasi selesai: <strong id="eta">~2 menit</strong></span>
+  </div>
+
+  <div style="height: 1.5rem;"></div>
+
+  <div class="brand">
+    <div class="brand-dot"></div>
+    <span class="brand-name">Zy<span>Stream</span></span>
+  </div>
+</div>
+
+<script>
+  let progress = 0;
+  const fill = document.getElementById('pbar');
+  const pct = document.getElementById('pct');
+  const etaEl = document.getElementById('eta');
+
+  const target = 68;
+
+  function animateProgress() {
+    if (progress < target) {
+      progress += Math.random() * 1.2 + 0.3;
+      if (progress > target) progress = target;
+      fill.style.width = Math.round(progress) + '%';
+      pct.textContent = Math.round(progress) + '%';
+
+      const remaining = Math.max(1, Math.ceil((100 - progress) / 50));
+      etaEl.textContent = '~' + remaining + ' menit';
+
+      setTimeout(animateProgress, 200 + Math.random() * 300);
+    }
+  }
+
+  setTimeout(animateProgress, 600);
+</script>
